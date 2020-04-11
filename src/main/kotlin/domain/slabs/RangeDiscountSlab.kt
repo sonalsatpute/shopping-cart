@@ -9,6 +9,7 @@ class RangeDiscountSlab(val customerType: CustomerType, val startWithAmount: Amo
 
     override fun discount(customerType: CustomerType, purchaseAmount: Amount): Amount {
         if (startWithAmount > purchaseAmount) return Amount(BigDecimal(0.00))
+        if (endBeforeAmount < purchaseAmount) return Amount(BigDecimal(0.00))
 
         return Amount(BigDecimal(-1))
     }

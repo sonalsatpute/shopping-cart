@@ -22,4 +22,17 @@ internal class RangeDiscountSlabTests {
 
         assertEquals(Amount.zero(), discount)
     }
+
+    @Test
+    fun `when end before amount is less than purchase amount, discount should be zero` () {
+        val startWithAmount = Amount(BigDecimal(5000.00))
+        val endBeforeAmount = Amount(BigDecimal(10000.00))
+        val purchaseAmount = Amount(BigDecimal(15000.00))
+        val calculator = mockk<Calculator>()
+        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startWithAmount, endBeforeAmount, calculator)
+
+        val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
+
+        assertEquals(Amount.zero(), discount)
+    }
 }
