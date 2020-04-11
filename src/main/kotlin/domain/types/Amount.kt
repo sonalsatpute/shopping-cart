@@ -19,4 +19,6 @@ data class Amount(val value: BigDecimal) : Comparable<Amount> {
     override fun hashCode(): Int {
         return value.multiply(BigDecimal("100")).intValueExact()
     }
+
+    operator fun minus(b: Amount) = Amount(this.value - b.value)
 }
