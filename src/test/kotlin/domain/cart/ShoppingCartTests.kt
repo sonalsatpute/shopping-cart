@@ -1,6 +1,6 @@
 package domain.cart
 
-import domain.calculators.DiscountCalculator
+import domain.slabs.DiscountSlab
 import domain.types.Amount
 import domain.types.Customer
 import domain.types.CustomerType
@@ -10,20 +10,20 @@ import java.math.BigDecimal
 
 class ShoppingCartTests {
     @Test
-    fun `shopping cart takes Customer, DiscountCalculator`() {
+    fun `shopping cart takes customer and list of discount slabs`() {
         val customer = Customer(CustomerType.Regular)
-        val discountCalculator = DiscountCalculator()
-        val shoppingCart = ShoppingCart(customer, discountCalculator)
+        val discountSlabs = listOf<DiscountSlab>()
+        val shoppingCart = ShoppingCart(customer, discountSlabs)
 
         assertEquals(customer, shoppingCart.customer)
-        assertEquals(discountCalculator, shoppingCart.discountCalculator)
+        assertEquals(discountSlabs, shoppingCart.discountSlabs)
     }
 
     @Test
-    fun `shopping cart calculates bill Amount on Purchase Amount`() {
+    fun `shopping cart should calculates bill amount`() {
         val customer = Customer(CustomerType.Regular)
-        val discountCalculator = DiscountCalculator()
-        val shoppingCart = ShoppingCart(customer, discountCalculator)
+        val discountSlabs = listOf<DiscountSlab>()
+        val shoppingCart = ShoppingCart(customer, discountSlabs)
         val purchaseAmount = Amount(BigDecimal(100))
 
         val billAmount = shoppingCart.billAmount(purchaseAmount)
@@ -31,3 +31,4 @@ class ShoppingCartTests {
         assertEquals(purchaseAmount, billAmount)
     }
 }
+
