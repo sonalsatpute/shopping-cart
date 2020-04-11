@@ -4,6 +4,6 @@ import domain.types.Amount
 import domain.types.CustomerType
 
 interface DiscountSlab {
-    fun calculate(customerType: CustomerType, purchaseAmount: Amount) : Amount
+    fun discount(customerType: CustomerType, purchaseAmount: Amount) : Amount
 }
 
