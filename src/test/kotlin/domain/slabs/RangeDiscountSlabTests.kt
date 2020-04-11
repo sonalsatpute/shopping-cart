@@ -14,10 +14,10 @@ internal class RangeDiscountSlabTests {
     @Test
     fun `when purchase amount is less than slab rage, discount should be zero` () {
         val startAfterAmount = Amount(BigDecimal(5000.00))
-        val endBeforeAmount = Amount(BigDecimal(10000.00))
+        val endsOnAmount = Amount(BigDecimal(10000.00))
         val purchaseAmount = Amount(BigDecimal(101.00))
         val calculator = mockk<Calculator>()
-        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endBeforeAmount, calculator)
+        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endsOnAmount, calculator)
 
         val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
 
@@ -25,32 +25,51 @@ internal class RangeDiscountSlabTests {
     }
 
     @Test
-    fun `when purchase amount is greater than slab range, discount should be zero`() {
+    fun `when purchase amount is within slab range, discount should be calculated` () {
         val startAfterAmount = Amount(BigDecimal(5000.00))
-        val endBeforeAmount = Amount(BigDecimal(10000.00))
-        val purchaseAmount = Amount(BigDecimal(15000.00))
+        val endsOnAmount = Amount(BigDecimal(10000.00))
+        val purchaseAmount = Amount(BigDecimal(6000.00))
+        val expectedDiscountAmount = Amount(BigDecimal(50.00))
+
         val calculator = mockk<Calculator>()
-        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endBeforeAmount, calculator)
+        every { calculator.calculate(Amount(BigDecimal(1000))) } returns expectedDiscountAmount
+
+        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endsOnAmount, calculator)
 
         val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
 
-        assertEquals(Amount.zero(), discount)
+        assertEquals(expectedDiscountAmount, discount)
     }
 
     @Test
-    fun `when purchase amount is within slab range, 10% discount should be calculated` () {
-        val startWithAmount = Amount(BigDecimal(5000.00))
-        val endBeforeAmount = Amount(BigDecimal(10000.00))
-        val purchaseAmount = Amount(BigDecimal(10000.00))
+    fun `when purchase amount is greater than slab range, discount should calculated`() {
+        val startAfterAmount = Amount(BigDecimal(5000.00))
+        val endsOnAmount = Amount(BigDecimal(10000.00))
+        val purchaseAmount = Amount(BigDecimal(15000.00))
+
         val expectedDiscountAmount = Amount(BigDecimal(500.00))
 
         val calculator = mockk<Calculator>()
         every { calculator.calculate(Amount(BigDecimal(5000))) } returns expectedDiscountAmount
 
-        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startWithAmount, endBeforeAmount, calculator)
+        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endsOnAmount, calculator)
 
         val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
 
         assertEquals(expectedDiscountAmount, discount)
+    }
+
+    @Test
+    fun `when customer type not match, discount should be zero`() {
+        val startAfterAmount = Amount(BigDecimal(5000.00))
+        val endsOnAmount = Amount(BigDecimal(10000.00))
+        val purchaseAmount = Amount(BigDecimal(6000.00))
+
+        val calculator = mockk<Calculator>()
+        val discountSlab = RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endsOnAmount, calculator)
+
+        val discount = discountSlab.discount(CustomerType.Unknown, purchaseAmount)
+
+        assertEquals(Amount.zero(), discount)
     }
 }
