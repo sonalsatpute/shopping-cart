@@ -1,11 +1,16 @@
 package domain.types
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class Amount(val value: BigDecimal) : Comparable<Amount> {
 
     companion object {
         fun zero() = Amount(BigDecimal(0.00))
+    }
+
+    override fun toString(): String {
+        return value.setScale(2, RoundingMode.HALF_EVEN).toString()
     }
 
     override fun compareTo(other: Amount): Int = this.value.compareTo(other.value)

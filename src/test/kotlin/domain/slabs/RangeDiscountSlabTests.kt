@@ -5,6 +5,7 @@ import domain.types.Amount
 import domain.types.CustomerType
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -71,5 +72,18 @@ internal class RangeDiscountSlabTests {
         val discount = discountSlab.discount(CustomerType.Unknown, purchaseAmount)
 
         assertEquals(Amount.zero(), discount)
+    }
+
+    @Test
+    fun `when start with amount is greater than ends on amount it should fail`() {
+        val startAfterAmount = Amount(BigDecimal(10000))
+        val endsOnAmount = Amount(BigDecimal(5000))
+
+        val calculator = mockk<Calculator>()
+        val exception = Assertions.assertThrows(
+            IllegalArgumentException::class.java
+        ) { RangeDiscountSlab(CustomerType.Regular, startAfterAmount, endsOnAmount, calculator) }
+
+        assertEquals("startAfterAmount:'10000.00' is greater than endsOnAmount:'5000.00'.", exception.message)
     }
 }
