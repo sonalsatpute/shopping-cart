@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -22,7 +23,7 @@ class AboveDiscountSlabTests {
 
         val discount = discountSlab.discount(CustomerType.Unknown, purchaseAmount)
 
-        Assertions.assertEquals(Amount.zero(), discount)
+        assertEquals(Amount.zero(), discount)
     }
 
     @Test
@@ -35,7 +36,7 @@ class AboveDiscountSlabTests {
 
         val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
 
-        Assertions.assertEquals(Amount.zero(), discount)
+        assertEquals(Amount.zero(), discount)
     }
 
     @Test
@@ -51,6 +52,6 @@ class AboveDiscountSlabTests {
         val discount = discountSlab.discount(CustomerType.Regular, purchaseAmount)
 
         verify { calculator.calculate(Amount(BigDecimal(5000))) }
-        Assertions.assertEquals(expectedAmount, discount)
+        assertEquals(expectedAmount, discount)
     }
 }

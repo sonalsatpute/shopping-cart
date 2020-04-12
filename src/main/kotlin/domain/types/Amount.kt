@@ -26,4 +26,5 @@ data class Amount(val value: BigDecimal) : Comparable<Amount> {
     }
 
     operator fun minus(b: Amount) = Amount(this.value - b.value)
+    operator fun times(p: Percentage) = Amount((this.value * p.value).setScale(2, RoundingMode.HALF_EVEN))
 }
