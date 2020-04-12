@@ -3,7 +3,6 @@ package domain.slabs
 import domain.calculator.Calculator
 import domain.types.Amount
 import domain.types.CustomerType
-import java.math.BigDecimal
 
 class AboveDiscountSlab(private val customerType: CustomerType, private val startAmount: Amount,
                         private val calculator: Calculator) : DiscountSlab {
@@ -12,7 +11,7 @@ class AboveDiscountSlab(private val customerType: CustomerType, private val star
         if (this.customerType != customerType) return Amount.zero()
         if (purchaseAmount < startAmount) return Amount.zero()
 
-        return Amount(BigDecimal(-1))
+        return calculator.calculate(purchaseAmount - startAmount)
     }
 
 }
