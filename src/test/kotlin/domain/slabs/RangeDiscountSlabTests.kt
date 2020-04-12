@@ -43,7 +43,7 @@ internal class RangeDiscountSlabTests {
     }
 
     @Test
-    fun `when purchase amount is greater than slab range, discount should calculated`() {
+    fun `when purchase amount is greater than slab range, discount should be calculated`() {
         val startAfterAmount = Amount(BigDecimal(5000.00))
         val endsOnAmount = Amount(BigDecimal(10000.00))
         val purchaseAmount = Amount(BigDecimal(15000.00))
